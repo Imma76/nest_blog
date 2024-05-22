@@ -10,7 +10,7 @@ export class Post {
     userId: string;
     @Prop({ required: true })
     comments: string[];
-    @Prop()
+    @Prop({ default: Date.now })
     createdAt: Date;
 }
 

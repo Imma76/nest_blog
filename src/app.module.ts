@@ -7,6 +7,7 @@ import { CommentController } from './comments/controllers/comment/comment.contro
 import { CommentService } from './comments/services/comment/comment.service';
 import { PostController } from './post/controllers/post/post.controller';
 import { PostService } from './post/service/post/post.service';
+import { Post, postSchema } from './schema/post.schema';
 import { User, userSchema } from './schema/user.schema';
 import { UsersController } from './user/controllers/users/users.controller';
 import { UsersService } from './user/services/users/users.service';
@@ -17,7 +18,7 @@ import { UsersService } from './user/services/users/users.service';
       'mongodb+srv://Emma:SpC9Qvv4luueqBPY@cluster0.kx41p.mongodb.net/nest_blog?retryWrites=true&w=majority',
     ),
     MongooseModule.forFeature([
-      { name: User.name, schema: userSchema }
+      { name: User.name, schema: userSchema }, { name: Post.name, schema: postSchema }
     ]),
     JwtModule.register({
       global: true,

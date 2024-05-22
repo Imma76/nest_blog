@@ -6,20 +6,20 @@ import {
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
-import { compareSync, genSaltSync, hashSync } from 'bcrypt-ts';
+import * as bcrypt from 'bcrypt';
 import { CreateUserDTO, LogInUserDTO } from 'src/dto/user.dto';
 import { UsersService } from 'src/user/services/users/users.service';
 
 @Controller('user')
 export class UsersController {
-  constructor(private userService: UsersService) {}
+  constructor(private userService: UsersService) { }
 
   @Post()
   @UsePipes(new ValidationPipe())
   async createUser(@Body() userDTO: CreateUserDTO) {
-    const salt = genSaltSync(10);
-
-    const hash = hashSync(userDTO.password, salt);
+    const saltOrRounds = 10;
+    const password = userDTO.password;
+    const hash = await bcrypt.hash(password, saltOrRounds);
     userDTO.password = hash;
     const newUser = await this.userService.createUser(userDTO);
     return {
@@ -38,9 +38,10 @@ export class UsersController {
         message: 'User not found',
       };
     }
-    const check = compareSync(logInDTO.password, user.password);
-    console.log(check);
-    if (!check) {
+    const isMatch = await bcrypt.compare(logInDTO.password, user.password);
+    // const check = compareSync(logInDTO.password, user.password);
+    console.log(isMatch);
+    if (!isMatch) {
       throw new HttpException('Invalid credentials', 400);
     }
     delete user.password;

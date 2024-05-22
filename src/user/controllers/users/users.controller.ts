@@ -6,13 +6,17 @@ import {
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { CreateUserDTO, LogInUserDTO } from 'src/dto/user.dto';
 import { UsersService } from 'src/user/services/users/users.service';
 
 @Controller('user')
 export class UsersController {
-  constructor(private userService: UsersService) { }
+  constructor(
+    private userService: UsersService,
+    private jwtService: JwtService,
+  ) { }
 
   @Post()
   @UsePipes(new ValidationPipe())
@@ -22,6 +26,7 @@ export class UsersController {
     const hash = await bcrypt.hash(password, saltOrRounds);
     userDTO.password = hash;
     const newUser = await this.userService.createUser(userDTO);
+    newUser.password = undefined;
     return {
       status: true,
       message: 'User created successfully',
@@ -40,11 +45,12 @@ export class UsersController {
     }
     const isMatch = await bcrypt.compare(logInDTO.password, user.password);
     // const check = compareSync(logInDTO.password, user.password);
-    console.log(isMatch);
+
     if (!isMatch) {
       throw new HttpException('Invalid credentials', 400);
     }
-    delete user.password;
-    return user;
+    user.password = undefined;
+    const token = await this.jwtService.signAsync({ email: user.email, userName: user.username }, { privateKey: process.env.privateKey, secret: process.env.salt });
+    return { status: true, token: token, data: user };
   }
 }

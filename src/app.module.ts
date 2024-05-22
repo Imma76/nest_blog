@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { JwtModule, JwtService } from '@nestjs/jwt';
 import { MongooseModule } from '@nestjs/mongoose';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -17,7 +18,13 @@ import { UsersService } from './user/services/users/users.service';
     ),
     MongooseModule.forFeature([
       { name: User.name, schema: userSchema }
-    ])
+    ]),
+    JwtModule.register({
+      global: true,
+      secret: process.env.salt,
+      privateKey: process.env.privateKey,
+      signOptions: { expiresIn: '10' },
+    }),
   ],
   controllers: [
     AppController,
@@ -25,6 +32,6 @@ import { UsersService } from './user/services/users/users.service';
     PostController,
     CommentController,
   ],
-  providers: [AppService, CommentService, UsersService, PostService],
+  providers: [AppService, CommentService, UsersService, PostService, JwtService],
 })
 export class AppModule { }

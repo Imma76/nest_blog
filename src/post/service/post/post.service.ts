@@ -14,4 +14,8 @@ export class PostService {
         const newPost = await this.postModel.create(postDto);
         return newPost;
     }
+    async getPost() {
+        const allPost = await this.postModel.find({});
+        return allPost;
+    }
 }

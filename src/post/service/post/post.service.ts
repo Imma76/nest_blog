@@ -8,18 +8,22 @@ import { Post } from 'src/schema/post.schema';
 @Injectable()
 @UseGuards(PostGuard)
 export class PostService {
-    constructor(@InjectModel(Post.name) private postModel: Model<Post>) { }
+  constructor(@InjectModel(Post.name) private postModel: Model<Post>) {}
 
-    async createPost(postDto: CreatePostDTO) {
-        const newPost = await this.postModel.create(postDto);
-        return newPost;
-    }
-    async getPost() {
-        const allPost = await this.postModel.find({});
-        return allPost;
-    }
-    async getPostById(id: string) {
-        const allPost = await this.postModel.findById(id);
-        return allPost;
-    }
+  async createPost({ user, ...postDto }: CreatePostDTO) {
+    const newPost = await this.postModel.create({
+      title: postDto.title,
+      content: postDto.content,
+      user: user.id,
+    });
+    return newPost;
+  }
+  async getPost() {
+    const allPost = await this.postModel.find({});
+    return allPost;
+  }
+  async getPostById(id: string) {
+    const allPost = await this.postModel.findById(id);
+    return allPost;
+  }
 }

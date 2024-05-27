@@ -1,4 +1,6 @@
-import { IsNotEmpty, IsString } from 'class-validator';
+import { Type } from 'class-transformer';
+import { IsNotEmpty, IsOptional, IsString, ValidateNested } from 'class-validator';
+import { UserDTO } from './user.dto';
 
 export class CreatePostDTO {
   @IsNotEmpty()
@@ -7,7 +9,8 @@ export class CreatePostDTO {
   @IsNotEmpty()
   @IsString()
   content: string;
-  @IsNotEmpty()
-  @IsString()
-  userId: string;
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => UserDTO)
+  user?: UserDTO;
 }

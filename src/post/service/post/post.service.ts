@@ -18,4 +18,8 @@ export class PostService {
         const allPost = await this.postModel.find({});
         return allPost;
     }
+    async getPostById(id: string) {
+        const allPost = await this.postModel.findById(id);
+        return allPost;
+    }
 }

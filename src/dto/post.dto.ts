@@ -1,5 +1,6 @@
 import { Type } from 'class-transformer';
-import { IsNotEmpty, IsOptional, IsString, ValidateNested } from 'class-validator';
+import { IsArray, IsNotEmpty, IsOptional, IsString, ValidateNested } from 'class-validator';
+import { CommentsDTO } from './comments.dto';
 import { UserDTO } from './user.dto';
 
 export class CreatePostDTO {
@@ -11,6 +12,18 @@ export class CreatePostDTO {
   content: string;
   @IsOptional()
   @ValidateNested()
+  @IsArray()
+  comments: CommentsDTO[];
   @Type(() => UserDTO)
   user?: UserDTO;
+}
+
+export class PostDTO {
+
+  title: string;
+
+  content: string;
+  id: string;
+
+
 }

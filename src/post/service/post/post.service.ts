@@ -10,7 +10,8 @@ import { Post } from 'src/schema/post.schema';
 export class PostService {
   constructor(@InjectModel(Post.name) private postModel: Model<Post>) {}
 
-  async createPost({ user, ...postDto }: CreatePostDTO) {
+    async createPost({ user, ...postDto }: CreatePostDTO) {
+      
     const newPost = await this.postModel.create({
       title: postDto.title,
       content: postDto.content,

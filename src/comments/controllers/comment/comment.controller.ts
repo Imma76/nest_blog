@@ -1,8 +1,10 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
+import { CommentGuard } from 'src/comments/guard/comment/comment.guard';
 import { CommentService } from 'src/comments/services/comment/comment.service';
 import { CommentsDTO } from 'src/dto/comments.dto';
 
 @Controller('comment')
+@UseGuards(CommentGuard)
 export class CommentController {
     constructor(private commentService: CommentService) { }
 

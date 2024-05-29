@@ -15,7 +15,7 @@ import { PostService } from 'src/post/service/post/post.service';
 
 @Controller('post')
 export class PostController {
-  constructor(private postService: PostService) {}
+  constructor(private postService: PostService) { }
 
   @Post()
   @UseGuards(PostGuard)

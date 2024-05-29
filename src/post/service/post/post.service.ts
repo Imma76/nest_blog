@@ -8,10 +8,10 @@ import { Post } from 'src/schema/post.schema';
 @Injectable()
 @UseGuards(PostGuard)
 export class PostService {
-  constructor(@InjectModel(Post.name) private postModel: Model<Post>) {}
+  constructor(@InjectModel(Post.name) private postModel: Model<Post>) { }
 
-    async createPost({ user, ...postDto }: CreatePostDTO) {
-      
+  async createPost({ user, ...postDto }: CreatePostDTO) {
+
     const newPost = await this.postModel.create({
       title: postDto.title,
       content: postDto.content,
@@ -20,7 +20,7 @@ export class PostService {
     return newPost;
   }
   async getPost() {
-    const allPost = await this.postModel.find({});
+    const allPost = await this.postModel.find({}).populate('comments').exec();
     return allPost;
   }
   async getPostById(id: string) {

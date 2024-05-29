@@ -14,12 +14,10 @@ export class CommentService {
 
   async postComment(commentDto: CommentsDTO) {
     const newComment = await this.commentModel.create({
-      user: 
-         commentDto.user.id,
-      
-    
-        post: commentDto.post.id,
-      
+      user: commentDto.user.id,
+
+      post: commentDto.post.id,
+
       comment: commentDto.comment,
     });
 
@@ -27,6 +25,14 @@ export class CommentService {
       { _id: commentDto.post.id },
       { $push: { comments: newComment._id } },
     );
-      return newComment;
+    return newComment;
+  }
+
+  async getComment() {
+    const comments = await this.commentModel
+      .find({})
+      .populate('user')
+      .populate('post');
+    return comments;
   }
 }
